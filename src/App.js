@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { alpha } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Calender from './components/CalenderView';
+import { Container } from '@mui/material';
 
-function App() {
+export default function Dashboard() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Container>
+      <CssBaseline enableColorScheme />
+      <Box sx={{ display: 'flex' }}>
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+              : alpha(theme.palette.background.default, 1),
+            overflow: 'auto',
+          })}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Stack
+            spacing={2}
+            sx={{
+              alignItems: 'center',
+              mx: 3,
+              pb: 5,
+              mt: { xs: 8, md: 0 },
+            }}
+          >
+            <Calender />
+          </Stack>
+        </Box>
+      </Box>
+    </Container>
   );
 }
-
-export default App;
