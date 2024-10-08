@@ -5,19 +5,19 @@ import { useState } from 'react'
 import Typography from '@mui/material/Typography';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import EventsModal from './EventsModal';
 
 const localizer = momentLocalizer(moment)
 
 export default function Calender() {
-  const [events, setEvent] = useState([])
+  const [events, setEvents] = useState([])
   const [openModel, setOpenModel] = useState(false)
 
-  const handleSelect = ({start, end}) => {
-    setEvent([...events, {
-      title: 'New Event',
-      start,
-      end
-    }])
+  const handleEvent = (event) => {
+    setOpenModel(false)
+    let eventVal = event
+    eventVal.id = events.length + 1
+    setEvents([...events, eventVal])
   }
 
   return (
@@ -36,7 +36,13 @@ export default function Calender() {
           selectable
           events={events}
           style={{ height: 500, width: "100%" }}
-          onSelectSlot={handleSelect} />
+          onSelectEvent={(e) => console.log(e)}
+          onSelectSlot={() => setOpenModel(true)} />
+
+        <EventsModal 
+          open={openModel} 
+          closeModal={() => setOpenModel(false)}
+          createEvent={(event) => handleEvent(event)} />
       </Grid>
     </Box>
   );
