@@ -24,6 +24,7 @@ export default function Dashboard() {
               mx: 3,
               pb: 5,
               mt: { xs: 8, md: 0 },
+              width: '100%'
             }}
           >
             <Sidebar />
