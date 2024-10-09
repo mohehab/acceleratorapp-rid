@@ -12,12 +12,40 @@ const localizer = momentLocalizer(moment)
 export default function Calender() {
   const [events, setEvents] = useState([])
   const [openModel, setOpenModel] = useState(false)
+  const [mode, setMode] = useState('')
+  const [selectedEvent, setSelectedEvent] = useState({})
 
   const handleEvent = (event) => {
-    setOpenModel(false)
-    let eventVal = event
-    eventVal.id = events.length + 1
-    setEvents([...events, eventVal])
+    if (mode === 'Create') {
+      let eventVal = event
+      eventVal.id = events.length + 1
+      setEvents([...events, eventVal])
+    }
+    if (mode === 'Edit') {
+      const evtIndex = events.findIndex(item => item.id === event.id)
+      if (evtIndex > -1) {
+        const eventsList = [...events]
+        eventsList[evtIndex] = event
+        setEvents(eventsList)
+      }
+    }
+    localStorage.setItem('Events', JSON.stringify(events));
+  }
+
+  const handleModalMode = (mode, event) => {
+    if (mode === 'create') {
+      setMode('Create')
+    }
+    if (mode === 'edit') {
+      setMode('Edit')
+      setSelectedEvent(event)
+    }
+    setOpenModel(true)
+  }
+
+  const handleDelete = (id) => {
+    setEvents(events.filter(event => event.id !== id))
+    localStorage.setItem('Events', JSON.stringify(events));
   }
 
   return (
@@ -36,12 +64,15 @@ export default function Calender() {
           selectable
           events={events}
           style={{ height: 500, width: "100%" }}
-          onSelectEvent={(e) => console.log(e)}
-          onSelectSlot={() => setOpenModel(true)} />
+          onSelectEvent={(e) => handleModalMode('edit', e)}
+          onSelectSlot={() => handleModalMode('create')} />
 
         <EventsModal 
           open={openModel} 
           closeModal={() => setOpenModel(false)}
+          mode={mode}
+          selected={selectedEvent}
+          deleteEvent={(id) => handleDelete(id)}
           createEvent={(event) => handleEvent(event)} />
       </Grid>
     </Box>
